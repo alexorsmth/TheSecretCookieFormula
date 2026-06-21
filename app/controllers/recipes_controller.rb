@@ -40,6 +40,6 @@ class RecipesController < ApplicationController
   end
 
   def recipe_params
-    params.require(:recipe).permit(:name, :flour, :sugar, :butter, :eggs, :salt)
+    params.require(:recipe).permit(:name, :flour,:brown_sugar , :sugar, :butter, :eggs, :salt, :baking_soda, :chocolate_chips, :vanilla)
   end
 end

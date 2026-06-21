@@ -10,9 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_17_010104) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_20_220609) do
   create_table "recipes", force: :cascade do |t|
+    t.integer "baking_soda"
+    t.integer "brown_sugar"
     t.integer "butter"
+    t.integer "chocolate_chips"
     t.datetime "created_at", null: false
     t.integer "eggs"
     t.integer "flour"
@@ -21,5 +24,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_17_010104) do
     t.integer "salt"
     t.integer "sugar"
     t.datetime "updated_at", null: false
+    t.integer "vanilla"
+    t.index ["name"], name: "index_recipes_on_name", unique: true
   end
 end

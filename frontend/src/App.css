@@ -1,0 +1,60 @@
+@font-face {
+  font-family: "KiwiSoda";
+  src: url("./assets/fonts/KiwiSoda.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  margin: 0;
+  background: #fff4df;
+  color: #2b1a10;
+  font-family: "KiwiSoda", arial ,sans-serif;
+}
+
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.card {
+  background: white;
+  border: 2px solid #d7a86e;
+  border-radius: 16px;
+  padding: 24px;
+  margin: 20px 0;
+  box-shadow: 0 6px 18px rgba(80, 45, 20, 0.15);
+}
+
+input {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #c49a6c;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+button {
+  background: #8b4513;
+  color: white;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #6f3510;
+}
+
+
+
+.result {
+  background: #fff8ec;
+  border-left: 6px solid #8b4513;
+  padding: 14px;
+  border-radius: 10px;
+}
