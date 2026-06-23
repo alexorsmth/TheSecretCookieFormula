@@ -1,4 +1,13 @@
 import { useEffect, useState } from "react";
+import {
+  Button,
+  Card,
+  CardContent,
+  Slider,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import "./App.css";
 
 type Recipe = {
@@ -29,68 +38,39 @@ type RecipeForm = {
   vanilla: string;
 };
 
+const BASE_RECIPE: RecipeForm = {
+  name: "Soft and Chewy Cookies",
+  flour: "191",
+  sugar: "100",
+  brown_sugar: "50",
+  butter: "113",
+  eggs: "1",
+  salt: "0.5",
+  baking_soda: "0.5",
+  chocolate_chips: "0.75",
+  vanilla: "1",
+};
+
+const ingredientSliders = [
+  { key: "flour", label: "Flour", unit: "g", min: 140, max: 250, step: 1 },
+  { key: "sugar", label: "White Sugar", unit: "g", min: 50, max: 160, step: 1 },
+  { key: "brown_sugar", label: "Brown Sugar", unit: "g", min: 25, max: 120, step: 1 },
+  { key: "butter", label: "Butter", unit: "g", min: 70, max: 170, step: 1 },
+  { key: "eggs", label: "Eggs", unit: "", min: 0, max: 3, step: 1 },
+  { key: "salt", label: "Salt", unit: "tsp", min: 0, max: 2, step: 0.25 },
+  { key: "baking_soda", label: "Baking Soda", unit: "tsp", min: 0, max: 2, step: 0.25 },
+  { key: "chocolate_chips", label: "Chocolate Chips", unit: "cups", min: 0, max: 2, step: 0.25 },
+  { key: "vanilla", label: "Vanilla", unit: "tsp", min: 0, max: 3, step: 0.25 },
+] as const;
+
 function App() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [form, setForm] = useState<RecipeForm>({
-    name: "",
-    flour: "",
-    sugar: "",
-    brown_sugar: "",
-    butter: "",
-    eggs: "",
-    salt: "",
-    baking_soda: "",
-    chocolate_chips: "",
-    vanilla: "",
-  });
-  const presetRecipes: RecipeForm[] = [
-    {
-      name: "Crispy Cookie",
-      flour: "75",
-      sugar: "62.5",
-      brown_sugar: "13g",
-      butter: "56.75",
-      eggs: "1/4",
-      salt: "1/4",
-      baking_soda: "1/4",
-      chocolate_chips: "1/2",
-      vanilla: "1/3",
-    },
-    {
-      name: "Soft and Chewy Cookies",
-      flour: "191",
-      sugar: "100",
-      brown_sugar: "50",
-      butter: "113",
-      eggs: "1",
-      salt: "1/2",
-      baking_soda: "1/2",
-      chocolate_chips: "3/4",
-      vanilla: "1",
-    },
-  ];
+  const [form, setForm] = useState<RecipeForm>(BASE_RECIPE);
 
   useEffect(() => {
     fetchRecipes();
   }, []);
 
-  function loadRecipeIntoForm(recipe: Recipe) {
-    setForm({
-      name: recipe.name,
-      flour: String(recipe.flour),
-      brown_sugar: String(recipe.brown_sugar),
-      sugar: String(recipe.sugar),
-      butter: String(recipe.butter),
-      eggs: String(recipe.eggs),
-      salt: String(recipe.salt),
-      baking_soda: String(recipe.baking_soda),
-      chocolate_chips: String(recipe.chocolate_chips),
-      vanilla: String(recipe.vanilla),
-    });
-  }
-  function loadPresetIntoForm(preset: RecipeForm) {
-    setForm(preset);
-  }
   function fetchRecipes() {
     fetch("http://localhost:3000/recipes")
       .then((res) => res.json())
@@ -98,12 +78,32 @@ function App() {
       .catch((error) => console.error("Error fetching recipes:", error));
   }
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = event.target;
-
+  function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setForm({
       ...form,
-      [name]: value,
+      name: event.target.value,
+    });
+  }
+
+  function handleSliderChange(name: keyof RecipeForm, value: number) {
+    setForm({
+      ...form,
+      [name]: String(value),
+    });
+  }
+
+  function loadRecipeIntoForm(recipe: Recipe) {
+    setForm({
+      name: recipe.name,
+      flour: String(recipe.flour ?? ""),
+      sugar: String(recipe.sugar ?? ""),
+      brown_sugar: String(recipe.brown_sugar ?? ""),
+      butter: String(recipe.butter ?? ""),
+      eggs: String(recipe.eggs ?? ""),
+      salt: String(recipe.salt ?? ""),
+      baking_soda: String(recipe.baking_soda ?? ""),
+      chocolate_chips: String(recipe.chocolate_chips ?? ""),
+      vanilla: String(recipe.vanilla ?? ""),
     });
   }
 
@@ -114,9 +114,13 @@ function App() {
       name: form.name,
       flour: Number(form.flour),
       sugar: Number(form.sugar),
+      brown_sugar: Number(form.brown_sugar),
       butter: Number(form.butter),
       eggs: Number(form.eggs),
       salt: Number(form.salt),
+      baking_soda: Number(form.baking_soda),
+      chocolate_chips: Number(form.chocolate_chips),
+      vanilla: Number(form.vanilla),
     };
 
     fetch("http://localhost:3000/recipes", {
@@ -139,19 +143,7 @@ function App() {
           return;
         }
 
-        setForm({
-          name: "",
-          flour: "",
-          sugar: "",
-          brown_sugar: "",
-          butter: "",
-          eggs: "",
-          salt: "",
-          baking_soda: "",
-          chocolate_chips: "",
-          vanilla: "",
-        });
-
+        setForm(BASE_RECIPE);
         fetchRecipes();
       })
       .catch((error) => {
@@ -162,60 +154,96 @@ function App() {
 
   return (
     <main className="page">
-      <h1>🍪 Cookie Formula Lab</h1>
+      <Typography variant="h2" component="h1" sx={{ mb: 3 }}>
+        🍪 Cookie Formula Lab
+      </Typography>
 
-      <form onSubmit={handleSubmit} className="card">
-        <h2>New Cookie Formula</h2>
+      <form onSubmit={handleSubmit}>
+        <Card className="card">
+          <CardContent>
+            <Stack spacing={3}>
+              <Typography variant="h5">
+                Adjust the Soft and Chewy Cookie Formula
+              </Typography>
 
-        <input name="name" placeholder="Recipe name" value={form.name} onChange={handleChange} />
-        <input name="flour" placeholder="Flour (g)" value={form.flour} onChange={handleChange} />
-        <input name="sugar" placeholder="White Sugar (g)" value={form.sugar} onChange={handleChange} />
-        <input name="brown_sugar" placeholder="Brown Sugar (g)" value={form.brown_sugar} onChange={handleChange} />
-        <input name="butter" placeholder="Butter (g)" value={form.butter} onChange={handleChange} />
-        <input name="eggs" placeholder="Eggs" value={form.eggs} onChange={handleChange} />
-        <input name="salt" placeholder="Salt (tsp)" value={form.salt} onChange={handleChange} />
-       <input name="baking_soda" placeholder="Baking Soda(tsp)" value={form.baking_soda} onChange={handleChange} />
-        <input name="chocolate_chips" placeholder="Chocolate Chips(g)" value={form.chocolate_chips} onChange={handleChange} />
-         <input name="vanilla" placeholder=" Vanilla(tsp)" value={form.vanilla} onChange={handleChange} />
-        <button type="submit">Analyze Cookie</button>
+              <TextField
+                name="name"
+                label="Recipe name"
+                value={form.name}
+                onChange={handleNameChange}
+                fullWidth
+              />
+
+              {ingredientSliders.map((ingredient) => (
+                <div key={ingredient.key}>
+                  <Typography>
+                    {ingredient.label}: {form[ingredient.key]} {ingredient.unit}
+                  </Typography>
+
+                  <Slider
+                    value={Number(form[ingredient.key])}
+                    min={ingredient.min}
+                    max={ingredient.max}
+                    step={ingredient.step}
+                    onChange={(_, value) =>
+                      handleSliderChange(ingredient.key, value as number)
+                    }
+                  />
+                </div>
+              ))}
+
+              <Stack direction="row" spacing={2}>
+                <Button type="submit" variant="contained">
+                  Analyze Cookie
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="outlined"
+                  onClick={() => setForm(BASE_RECIPE)}
+                >
+                  Reset to Base Recipe
+                </Button>
+              </Stack>
+            </Stack>
+          </CardContent>
+        </Card>
       </form>
 
-      <section className="card">
-        <h2>Start from a preset</h2>
-
-        {presetRecipes.map((preset) => (
-          <button
-            key={preset.name}
-            type="button"
-            onClick={() => loadPresetIntoForm(preset)}
-          >
-            {preset.name}
-          </button>
-        ))}
-      </section>
-
       <section>
-        <h2>Saved Recipes</h2>
-
-
+        <Typography variant="h4" component="h2" sx={{ mt: 4, mb: 2 }}>
+          Saved Recipes
+        </Typography>
 
         {recipes.map((recipe) => (
-          <div key={recipe.id} className="card">
-            <h3>{recipe.name}</h3>
+          <Card key={recipe.id} className="card">
+            <CardContent>
+              <Stack spacing={2}>
+                <Typography variant="h5">{recipe.name}</Typography>
 
-            <p>
-              Flour: {recipe.flour}g | Sugar: {recipe.sugar}g | Butter:{" "}
-              {recipe.butter}g | Eggs: {recipe.eggs} | Salt: {recipe.salt}g
-            </p>
+                <Typography>
+                  Flour: {recipe.flour}g | White Sugar: {recipe.sugar}g | Brown
+                  Sugar: {recipe.brown_sugar}g | Butter: {recipe.butter}g |
+                  Eggs: {recipe.eggs} | Salt: {recipe.salt} tsp | Baking Soda:{" "}
+                  {recipe.baking_soda} tsp | Chocolate Chips:{" "}
+                  {recipe.chocolate_chips} cups | Vanilla: {recipe.vanilla} tsp
+                </Typography>
 
-            <div className="result">
-              <strong>Prediction:</strong>
-              <p>{recipe.result}</p>
-            </div>
-            <button type="button" onClick={() => loadRecipeIntoForm(recipe)}>
-              Use this formula
-            </button>
-          </div>
+                <div className="result">
+                  <strong>Prediction:</strong>
+                  <p>{recipe.result}</p>
+                </div>
+
+                <Button
+                  type="button"
+                  variant="outlined"
+                  onClick={() => loadRecipeIntoForm(recipe)}
+                >
+                  Use this formula
+                </Button>
+              </Stack>
+            </CardContent>
+          </Card>
         ))}
       </section>
     </main>
