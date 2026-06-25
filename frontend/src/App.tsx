@@ -78,6 +78,30 @@ function App() {
       .catch((error) => console.error("Error fetching recipes:", error));
   }
 
+  function deleteRecipe(id: number) {
+    const confirmDelete = window.confirm("Delete this recipe?");
+
+    if (!confirmDelete) {
+      return;
+    }
+
+    fetch(`http://localhost:3000/recipes/${id}`, {
+      method: "DELETE",
+    })
+      .then((res) => {
+        if (!res.ok) {
+          alert("Something went wrong while deleting the recipe");
+          return;
+        }
+
+        fetchRecipes();
+      })
+      .catch((error) => {
+        console.error("Error deleting recipe:", error);
+        alert("Could not connect to the backend");
+      });
+  }
+
   function handleNameChange(event: React.ChangeEvent<HTMLInputElement>) {
     setForm({
       ...form,
@@ -154,16 +178,16 @@ function App() {
 
   return (
     <main className="page">
-      <Typography variant="h2" component="h1" sx={{ mb: 3 }}>
-        🍪 Cookie Formula Lab
+      <Typography variant="h2" component="h1" sx={{ fontFamily: "KiwiSoda, Courier New, monospace", mb: 3, color: "black", backgroundColor: "brown", border: "3px solid black", borderRadius: "12px", display: "inline-block", boxShadow: "0 6px 14px rgba(0, 0, 0, 0.25)" }}>
+        Cookie Formula Lab
       </Typography>
 
       <form onSubmit={handleSubmit}>
         <Card className="card">
           <CardContent>
             <Stack spacing={3}>
-              <Typography variant="h5">
-                Adjust the Soft and Chewy Cookie Formula
+              <Typography variant="h5" sx={{ fontFamily: "KiwiSoda, Courier New, monospace" }}>
+                Adjust the soft and chewy recipe for a dozen cookies!
               </Typography>
 
               <TextField
@@ -172,11 +196,24 @@ function App() {
                 value={form.name}
                 onChange={handleNameChange}
                 fullWidth
+                sx={{
+                  "& .MuiInputBase-input": {
+                    fontFamily: "KiwiSoda, Courier New, monospace",
+                    fontSize: "1.2rem",
+                  },
+                  "& .MuiInputLabel-root": {
+                    fontFamily: "KiwiSoda, Courier New, monospace",
+                  },
+                }}
               />
 
               {ingredientSliders.map((ingredient) => (
                 <div key={ingredient.key}>
-                  <Typography>
+                  <Typography sx={{
+                    fontFamily: "KiwiSoda, Arial, sans-serif",
+                    fontSize: "1.2rem",
+                    fontWeight: 700,
+                  }}>
                     {ingredient.label}: {form[ingredient.key]} {ingredient.unit}
                   </Typography>
 
@@ -192,8 +229,12 @@ function App() {
                 </div>
               ))}
 
-              <Stack direction="row" spacing={2}>
-                <Button type="submit" variant="contained">
+              <Stack direction="row" spacing={2} sx={{ justifyContent: "center" }}>
+                <Button type="submit" variant="contained" sx={{
+                  fontFamily: "KiwiSoda, Arial, sans-serif",
+                  fontWeight: 700,
+                  fontSize: "1rem",
+                }}>
                   Analyze Cookie
                 </Button>
 
@@ -201,6 +242,11 @@ function App() {
                   type="button"
                   variant="outlined"
                   onClick={() => setForm(BASE_RECIPE)}
+                  sx={{
+                    fontFamily: "KiwiSoda, Arial, sans-serif",
+                    fontWeight: 700,
+                    fontSize: "1rem",
+                  }}
                 >
                   Reset to Base Recipe
                 </Button>
@@ -211,40 +257,121 @@ function App() {
       </form>
 
       <section>
-        <Typography variant="h4" component="h2" sx={{ mt: 4, mb: 2 }}>
+        <Typography variant="h4" component="h2" sx={{ fontFamily: "KiwiSoda, Courier New, monospace", mb: 3, color: "black", backgroundColor: "brown", border: "3px solid black", borderRadius: "12px", display: "inline-block", boxShadow: "0 6px 14px rgba(0, 0, 0, 0.25)", fontSize: 100 }}>
           Saved Recipes
         </Typography>
+        <div className="recipt-grid">
+          {recipes.map((recipe) => (
+            <Card key={recipe.id} className="receipt-card">
+              <CardContent>
+                <div className="receipt-header">
+                  <Typography
+                    variant="h5"
+                    sx={{ fontFamily: "VCR" }}
+                    className="receipt-title"
+                  >
+                    {recipe.name}
+                  </Typography>
 
-        {recipes.map((recipe) => (
-          <Card key={recipe.id} className="card">
-            <CardContent>
-              <Stack spacing={2}>
-                <Typography variant="h5">{recipe.name}</Typography>
+                  <Typography
 
-                <Typography>
-                  Flour: {recipe.flour}g | White Sugar: {recipe.sugar}g | Brown
-                  Sugar: {recipe.brown_sugar}g | Butter: {recipe.butter}g |
-                  Eggs: {recipe.eggs} | Salt: {recipe.salt} tsp | Baking Soda:{" "}
-                  {recipe.baking_soda} tsp | Chocolate Chips:{" "}
-                  {recipe.chocolate_chips} cups | Vanilla: {recipe.vanilla} tsp
-                </Typography>
+                    sx={{ fontFamily: "VCR" }}
+                  >
+                    Bakery Experiment Receipt
+                  </Typography>
 
-                <div className="result">
-                  <strong>Prediction:</strong>
+                  <Typography
+
+                    sx={{ fontFamily: "VCR, Courier New, monospace" }}
+                  >
+                    **************************************************************
+                  </Typography>
+                </div>
+
+                <div className="receipt-line" />
+
+
+                <div className="receipt-line" />
+
+                <div className="receipt-row">
+                  <span>Flour </span>
+                  <span>{recipe.flour}g</span>
+                </div>
+
+                <div className="receipt-row">
+                  <span>White Sugar </span>
+                  <span>{recipe.sugar}g</span>
+                </div>
+
+                <div className="receipt-row">
+                  <span>Brown Sugar </span>
+                  <span>{recipe.brown_sugar}g</span>
+                </div>
+
+                <div className="receipt-row">
+                  <span>Butter </span>
+                  <span>{recipe.butter}g</span>
+                </div>
+
+                <div className="receipt-row">
+                  <span>Eggs </span>
+                  <span>{recipe.eggs}</span>
+                </div>
+
+                <div className="receipt-row">
+                  <span>Salt </span>
+                  <span>{recipe.salt} tsp</span>
+                </div>
+
+                <div className="receipt-row">
+                  <span>Baking Soda </span>
+                  <span>{recipe.baking_soda} tsp</span>
+                </div>
+
+                <div className="receipt-row">
+                  <span>Chocolate Chips </span>
+                  <span>{recipe.chocolate_chips} cups</span>
+                </div>
+
+                <div className="receipt-row">
+                  <span>Vanilla </span>
+                  <span>{recipe.vanilla} tsp</span>
+                </div>
+
+                <div className="receipt-line" />
+
+                <div className="receipt-result">
+                  <strong>Prediction</strong>
                   <p>{recipe.result}</p>
                 </div>
 
-                <Button
-                  type="button"
-                  variant="outlined"
-                  onClick={() => loadRecipeIntoForm(recipe)}
-                >
-                  Use this formula
-                </Button>
-              </Stack>
-            </CardContent>
-          </Card>
-        ))}
+                <Stack direction="row" spacing={2} sx={{ justifyContent: "center" }}>
+                  <Button
+                    sx={{ fontFamily: "KiwiSoda" }}
+                    type="button"
+                    variant="outlined"
+                    onClick={() => loadRecipeIntoForm(recipe)}
+                  >
+                    Use this formula
+                  </Button>
+
+                  <Button
+                    sx={{ fontFamily: "KiwiSoda" }}
+                    type="button"
+                    variant="contained"
+                    color="error"
+                    onClick={() => deleteRecipe(recipe.id)}
+                  >
+                    Delete
+                  </Button>
+                </Stack>
+
+
+              </CardContent>
+            </Card>
+
+          ))}
+        </div>
       </section>
     </main>
   );

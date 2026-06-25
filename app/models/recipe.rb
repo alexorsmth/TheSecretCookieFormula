@@ -17,60 +17,60 @@ class Recipe < ApplicationRecord
   messages = []
 
   if ratio_of(:flour) > 1.2
-    messages << "More flour than the base recipe: the cookie may become thicker, drier, and less spread out."
+    messages << "WAY TOO MUCH FLOUR: The cookie will dry out and it'll stay more firm.."
   elsif ratio_of(:flour) < 0.8
-    messages << "Less flour than the base recipe: the cookie may spread more and turn out thinner."
+    messages << "REDUCED FLOUR: Cookie might spread out more and itll hold up less."
   end
 
   if ratio_of(:sugar) > 1.2
-    messages << "More white sugar than the base recipe: the cookie may become sweeter, crispier, and brown faster."
+    messages << "MORE WHITE SUGAR THAN NORMAL: The cookie will get sweeter, and crispier."
   elsif ratio_of(:sugar) < 0.8
-    messages << "Less white sugar than the base recipe: the cookie may be less sweet and less crisp."
+    messages << "LESS WHITE SUGAR THAN NORMAL: the cookie may be less sweet and less crisp."
   end
 
   if ratio_of(:brown_sugar) > 1.2
-    messages << "More brown sugar than the base recipe: the cookie may become softer, chewier, and more moist."
+    messages << "MORE BROWN SUGAR: the cookie may become softer, chewier, and more moist."
   elsif ratio_of(:brown_sugar) < 0.8
-    messages << "Less brown sugar than the base recipe: the cookie may be less chewy."
+    messages << "REDUCED BROWN SUGAR: the cookie may be less chewy."
   end
 
   if ratio_of(:butter) > 1.2
-    messages << "More butter than the base recipe: the cookie may spread more and taste richer."
+    messages << "LOTSA BUTTER: the cookie may spread out more and be way more rich."
   elsif ratio_of(:butter) < 0.8
-    messages << "Less butter than the base recipe: the cookie may be drier and less rich."
+    messages << "REDUCED BUTTER: Cookie is gonna be way drier and spread less."
   end
 
   if eggs.to_f > BASE_RECIPE[:eggs]
-    messages << "More egg than the base recipe: the cookie may become cakier."
+    messages << "HELLA EGGS: Cookie is gonna morph into a cake."
   elsif eggs.to_f < BASE_RECIPE[:eggs]
-    messages << "Less egg than the base recipe: the cookie may bind less and become more crumbly."
+    messages << "LESS EGGS THAN NORMAL: the structure of the cookie is gonna start crumbling."
   end
 
   if ratio_of(:salt) > 1.5
-    messages << "More salt than the base recipe: the cookie may taste saltier and have a stronger contrast."
+    messages << "EXCESS SALT: Believe it or not its gonna get saltier."
   elsif salt.to_f == 0
-    messages << "No salt: the cookie may taste flatter and less balanced."
+    messages << "NO SALT: The cookie wont taste like much/you need more salt."
   end
 
   if ratio_of(:baking_soda) > 1.5
-    messages << "More baking soda than the base recipe: the cookie may spread more and could taste slightly bitter."
+    messages << "EXTRA BAKING SODA: Could taste more bitter but itll spread out a bit more."
   elsif baking_soda.to_f == 0
-    messages << "No baking soda: the cookie may spread less and brown less."
+    messages << "NO BAKING SODA: Cookies gonna spread way less."
   end
 
   if ratio_of(:chocolate_chips) > 1.3
-    messages << "More chocolate chips than the base recipe: the cookie may be chunkier and sweeter."
+    messages << "LOTSA CHOCOLATE CHIPS: BIGGER COOKIES."
   elsif ratio_of(:chocolate_chips) < 0.5
-    messages << "Fewer chocolate chips than the base recipe: the cookie may taste more plain."
+      messages << "LESS CHOCOCHIPS: boring cookie..."
   end
 
   if ratio_of(:vanilla) > 1.5
-    messages << "More vanilla than the base recipe: the cookie may have a stronger vanilla aroma."
+    messages << "LOTSA VANILLA: the cookie may have a stronger vanilla aroma."
   elsif vanilla.to_f == 0
-    messages << "No vanilla: the cookie may taste less aromatic."
+    messages << "NO VANILLA: the cookie may taste less aromatic."
   end
 
-  self.result = messages.any? ? messages.join(" ") : "This is close to the original soft and chewy cookie formula."
+  self.result = messages.any? ? messages.join(" ") : "you didn't really change much."
 end
 
 def ratio_of(ingredient)

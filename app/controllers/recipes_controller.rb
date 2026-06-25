@@ -39,6 +39,8 @@ class RecipesController < ApplicationController
     @recipe = Recipe.find(params[:id])
   end
 
+  
+
   def recipe_params
     params.require(:recipe).permit(:name, :flour,:brown_sugar , :sugar, :butter, :eggs, :salt, :baking_soda, :chocolate_chips, :vanilla)
   end

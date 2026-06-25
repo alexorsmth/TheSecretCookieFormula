@@ -10,21 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_20_220609) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_25_205449) do
   create_table "recipes", force: :cascade do |t|
-    t.integer "baking_soda"
+    t.float "baking_soda"
     t.integer "brown_sugar"
     t.integer "butter"
-    t.integer "chocolate_chips"
+    t.float "chocolate_chips"
     t.datetime "created_at", null: false
     t.integer "eggs"
     t.integer "flour"
     t.string "name"
     t.text "result"
-    t.integer "salt"
+    t.float "salt"
     t.integer "sugar"
     t.datetime "updated_at", null: false
-    t.integer "vanilla"
+    t.float "vanilla"
     t.index ["name"], name: "index_recipes_on_name", unique: true
   end
 end

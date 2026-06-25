@@ -6,7 +6,7 @@ class CreateRecipes < ActiveRecord::Migration[8.1]
       t.integer :sugar
       t.integer :butter
       t.integer :eggs
-      t.integer :salt
+      t.float :salt
       t.text :result
 
       t.timestamps
